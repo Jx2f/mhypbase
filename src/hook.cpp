@@ -5,11 +5,16 @@
 #include "il2cpp-appdata.h"
 #include "util.h"
 
+const char* WarnLuaScript = "[warn] Server is trying to execute a Lua script remotely, which is potentially dangerous if not from a trusted source.";
+
 namespace hook {
 	VOID Install() {
 		HookManager::install(app::MiHoYo__SDK__SDKUtil_RSAEncrypt, hook::MiHoYo__SDK__SDKUtil_RSAEncrypt);
-		HookManager::install(app::MoleMole__RSAUtil_GetRSAPublicKey, hook::MoleMole__RSAUtil_GetRSAPublicKey);
-		HookManager::install(app::MoleMole__RSAUtil_GetRSAPrivateKey, hook::MoleMole__RSAUtil_GetRSAPrivateKey);
+		HookManager::install(app::MoleMole__MoleMoleSecurity_GetPublicRSAKey, hook::MoleMole__MoleMoleSecurity_GetPublicRSAKey);
+		HookManager::install(app::MoleMole__MoleMoleSecurity_GetPrivateRSAKey, hook::MoleMole__MoleMoleSecurity_GetPrivateRSAKey);
+		HookManager::install(app::MoleMole__FightModule_OnWindSeedClientNotify, hook::MoleMole__FightModule_OnWindSeedClientNotify);
+		HookManager::install(app::MoleMole__PlayerModule_OnWindSeedClientNotify, hook::MoleMole__PlayerModule_OnWindSeedClientNotify);
+		HookManager::install(app::MoleMole__PlayerModule_OnReciveLuaShell, hook::MoleMole__PlayerModule_OnReciveLuaShell);
 	}
 
 	LPVOID MiHoYo__SDK__SDKUtil_RSAEncrypt(LPVOID publicKey, LPVOID content) {
@@ -22,25 +27,43 @@ namespace hook {
 		return CALL_ORIGIN(MiHoYo__SDK__SDKUtil_RSAEncrypt, publicKey, content);
 	}
 
-	LPVOID MoleMole__RSAUtil_GetRSAPublicKey() {
-		std::cout << "[hook] MoleMole__RSAUtil_GetRSAPublicKey reached." << std::endl;
+	LPVOID MoleMole__MoleMoleSecurity_GetPublicRSAKey() {
+		std::cout << "[hook] MoleMole__MoleMoleSecurity_GetPublicRSAKey reached." << std::endl;
 		const char* key = util::GetRSAPublicKey();
 		if (key == nullptr) {
-			return CALL_ORIGIN(MoleMole__RSAUtil_GetRSAPublicKey);
+			return CALL_ORIGIN(MoleMole__MoleMoleSecurity_GetPublicRSAKey);
 		}
-		std::cout << "[hook] MoleMole__RSAUtil_GetRSAPublicKey using the configured value." << std::endl;
+		std::cout << "[hook] MoleMole__MoleMoleSecurity_GetPublicRSAKey using the configured value." << std::endl;
 		auto encoding = app::System__Text__EncodingHelper_GetDefaultEncoding();
 		return app::System__Text__Encoding_GetBytes(encoding, il2cpp_string_new(key));
 	}
 
-	LPVOID MoleMole__RSAUtil_GetRSAPrivateKey() {
-		std::cout << "[hook] MoleMole__RSAUtil_GetRSAPrivateKey reached." << std::endl;
+	LPVOID MoleMole__MoleMoleSecurity_GetPrivateRSAKey() {
+		std::cout << "[hook] MoleMole__MoleMoleSecurity_GetPrivateRSAKey reached." << std::endl;
 		const char* key = util::GetRSAPrivateKey();
 		if (key == nullptr) {
-			return CALL_ORIGIN(MoleMole__RSAUtil_GetRSAPrivateKey);
+			return CALL_ORIGIN(MoleMole__MoleMoleSecurity_GetPrivateRSAKey);
 		}
-		std::cout << "[hook] MoleMole__RSAUtil_GetRSAPrivateKey using the configured value." << std::endl;
+		std::cout << "[hook] MoleMole__MoleMoleSecurity_GetPrivateRSAKey using the configured value." << std::endl;
 		auto encoding = app::System__Text__EncodingHelper_GetDefaultEncoding();
 		return app::System__Text__Encoding_GetBytes(encoding, il2cpp_string_new(key));
+	}
+
+	LPVOID MoleMole__FightModule_OnWindSeedClientNotify(LPVOID __this, LPVOID notify) {
+		std::cout << "[hook] MoleMole__FightModule_OnWindSeedClientNotify blocked." << std::endl;
+		std::cout << WarnLuaScript << std::endl;
+		return nullptr;
+	}
+
+	LPVOID MoleMole__PlayerModule_OnWindSeedClientNotify(LPVOID __this, LPVOID notify) {
+		std::cout << "[hook] MoleMole__PlayerModule_OnWindSeedClientNotify blocked." << std::endl;
+		std::cout << WarnLuaScript << std::endl;
+		return nullptr;
+	}
+
+	LPVOID MoleMole__PlayerModule_OnReciveLuaShell(LPVOID __this, LPVOID notify) {
+		std::cout << "[hook] MoleMole__PlayerModule_OnReciveLuaShell blocked." << std::endl;
+		std::cout << WarnLuaScript << std::endl;
+		return nullptr;
 	}
 }
