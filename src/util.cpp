@@ -5,8 +5,18 @@ namespace util
 {
     VOID LoadConfig()
     {
+        HWND hwnd = GetActiveWindow();
+        char ini_path[MAX_PATH] = {};
+        GetIniPath(ini_path);
+
         ini.SetUnicode();
-        ini.LoadFile("mhypbase.ini");
+
+        SI_Error err =ini.LoadFile(ini_path);
+
+        if (err!=0)
+        {
+            MessageBox(hwnd, "Load ini failed", "Error", MB_ICONERROR);
+        }
         if (ini.GetBoolValue("Basic", "EnableConsole", false)) {
             InitConsole();
         }
@@ -58,7 +68,9 @@ namespace util
 
     VOID SaveConfig()
     {
-        ini.SaveFile("mhypbase.ini");
+        char ini_path[MAX_PATH] = {};
+        GetIniPath(ini_path);
+        ini.SaveFile(ini_path);
     }
 
     VOID InitConsole()
@@ -124,5 +136,31 @@ namespace util
                     printf("%c", isprint(buf[i + j]) ? buf[i + j] : '.');
             printf("\n");
         }
+    }
+
+
+    //获取配置路径相关
+    HMODULE getSelfModuleHandle()
+    {
+        MEMORY_BASIC_INFORMATION mbi;
+        return ((::VirtualQuery(getSelfModuleHandle, &mbi, sizeof(mbi)) != 0) ? (HMODULE)mbi.AllocationBase : NULL);
+    }
+
+    std::string getSelfPath() {
+        char curDir[100] = { 0 };
+        GetModuleFileName(getSelfModuleHandle(), curDir, 100);
+        std::string CurrentDirectory = std::string(curDir);
+        int pos = CurrentDirectory.rfind("\\", CurrentDirectory.length());
+        CurrentDirectory = CurrentDirectory.substr(0, pos);
+        return CurrentDirectory;
+    }
+
+    int GetIniPath(char* c) {
+
+        std::string const& cc = getSelfPath() + std::string("\\mhypbase.ini");
+
+        strcpy_s(c, MAX_PATH, cc.c_str());
+
+        return 0;
     }
 }
