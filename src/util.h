@@ -17,7 +17,6 @@ namespace util {
 	VOID InitConsole();
 	VOID DisableLogReport();
 	VOID DisableVMProtect();
-	VOID DisableVMProtect();
 	VOID Dump(VOID* ptr, int buflen);
 	VOID HexDump(VOID* ptr, int buflen);
 }

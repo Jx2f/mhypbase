@@ -76,10 +76,14 @@ namespace util
     {
         char pathOut[MAX_PATH] = {};
         GetModuleFileName(NULL, pathOut, MAX_PATH);
-        auto path = std::filesystem::path(pathOut).parent_path() / "GenshinImpact_Data\\Plugins";
-        std::error_code ec;
-        std::filesystem::rename(path / "Astrolabe.dll", path / "Astrolabe.dll.bak", ec);
-        std::filesystem::rename(path / "MiHoYoMTRSDK.dll", path / "MiHoYoMTRSDK.dll.bak", ec);
+        auto pathOS = std::filesystem::path(pathOut).parent_path() / "GenshinImpact_Data" / "Plugins";
+        auto pathCN = std::filesystem::path(pathOut).parent_path() / "YuanShen_Data" / "Plugins";
+        std::error_code ec; // always ignore error code
+        std::filesystem::rename(pathOS / "Astrolabe.dll", pathOS / "Astrolabe.dll.bak", ec);
+        std::filesystem::rename(pathOS / "MiHoYoMTRSDK.dll", pathOS / "MiHoYoMTRSDK.dll.bak", ec);
+        std::filesystem::rename(pathCN / "Astrolabe.dll", pathCN / "Astrolabe.dll.bak", ec);
+        std::filesystem::rename(pathCN / "MiHoYoMTRSDK.dll", pathCN / "MiHoYoMTRSDK.dll.bak", ec);
+        // how to restore them??? hope nobody use it in prod.... XD
     }
 
     // https://github.com/yubie-re/vmp-virtualprotect-bypass/blob/main/src/vp-patch.hpp
