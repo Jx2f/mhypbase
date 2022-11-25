@@ -19,7 +19,7 @@ namespace hook {
 
 	LPVOID MiHoYo__SDK__SDKUtil_RSAEncrypt(LPVOID publicKey, LPVOID content) {
 		std::cout << "[hook] MiHoYo__SDK__SDKUtil_RSAEncrypt reached." << std::endl;
-		const char* key = util::GetRSAPublicKey();
+		const char* key = util::GetPublicRSAKey();
 		if (key != nullptr) {
 			std::cout << "[hook] MiHoYo__SDK__SDKUtil_RSAEncrypt using the configured value." << std::endl;
 			publicKey = il2cpp_string_new(key);
@@ -29,7 +29,7 @@ namespace hook {
 
 	LPVOID MoleMole__MoleMoleSecurity_GetPublicRSAKey() {
 		std::cout << "[hook] MoleMole__MoleMoleSecurity_GetPublicRSAKey reached." << std::endl;
-		const char* key = util::GetRSAPublicKey();
+		const char* key = util::GetPublicRSAKey();
 		if (key == nullptr) {
 			return CALL_ORIGIN(MoleMole__MoleMoleSecurity_GetPublicRSAKey);
 		}
@@ -40,7 +40,7 @@ namespace hook {
 
 	LPVOID MoleMole__MoleMoleSecurity_GetPrivateRSAKey() {
 		std::cout << "[hook] MoleMole__MoleMoleSecurity_GetPrivateRSAKey reached." << std::endl;
-		const char* key = util::GetRSAPrivateKey();
+		const char* key = util::GetPrivateRSAKey();
 		if (key == nullptr) {
 			return CALL_ORIGIN(MoleMole__MoleMoleSecurity_GetPrivateRSAKey);
 		}

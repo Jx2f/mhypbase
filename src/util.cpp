@@ -32,18 +32,18 @@ namespace util
                 }
             }
         }
-        RSAPublicKey = ini.GetValue("Value", "RSAPublicKey", nullptr);
-        RSAPrivateKey = ini.GetValue("Value", "RSAPrivateKey", nullptr);
+        PublicRSAKey = ini.GetValue("Value", "PublicRSAKey", nullptr);
+        PrivateRSAKey = ini.GetValue("Value", "PrivateRSAKey", nullptr);
     }
 
-    const char* GetRSAPublicKey() 
+    const char* GetPublicRSAKey() 
     {
-        return RSAPublicKey;
+        return PublicRSAKey;
     }
 
-    const char* GetRSAPrivateKey()
+    const char* GetPrivateRSAKey()
     {
-        return RSAPrivateKey;
+        return PrivateRSAKey;
     }
 
     bool GetBoolValue(const char* a_pSection, const char* a_pKey, bool a_nDefault)
