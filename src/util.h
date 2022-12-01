@@ -7,7 +7,6 @@ static CSimpleIni ini;
 
 namespace util {
 	VOID LoadConfig();
-	int GetIniPath(char* c);
 	static const char* ClientVersion;
 	static const char* RSAPublicKey;
 	static const char* RSAPrivateKey;
