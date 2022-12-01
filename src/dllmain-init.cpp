@@ -11,11 +11,11 @@ VOID InitDllMain(HMODULE *hModule)
 	std::cout << "[init] LogReport disabled." << std::endl;
 	while (GetModuleHandle("UserAssembly.dll") == nullptr)
 	{
-		std::cout << "[init] UserAssembly.dll isn't initialized, waiting for 2 sec." << std::endl;
-		Sleep(2000);
+		std::cout << "[init] UserAssembly.dll isn't initialized, waiting for a sec." << std::endl;
+		Sleep(1000);
 	}
-	std::cout << "[init] Waiting 15 sec for game initialize." << std::endl;
-	Sleep(15000);
+	std::cout << "[init] Waiting 5 sec for game initialize." << std::endl;
+	Sleep(5000);
 	util::DisableVMProtect();
 	std::cout << "[init] VMProtect disabled." << std::endl;
 	InitIl2Cpp();

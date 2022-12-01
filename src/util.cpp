@@ -14,7 +14,6 @@ namespace util
         char pathOut[MAX_PATH] = {};
         GetModuleFileName(GetSelfModuleHandle(), pathOut, MAX_PATH);
         auto path = std::filesystem::path(pathOut).parent_path() / "mhypbase.ini";
-
         return path.string().c_str();
     }
 
@@ -22,7 +21,7 @@ namespace util
     {
         ini.SetUnicode();
         ini.LoadFile(GetConfigPath());
-        if (ini.GetBoolValue("Basic", "EnableConsole", false)) {
+        if (GetEnableValue("EnableConsole", false)) {
             InitConsole();
         }
         ClientVersion = ini.GetValue("Offset", "ClientVersion", nullptr);
@@ -47,23 +46,29 @@ namespace util
                 }
             }
         }
-        RSAPublicKey = ini.GetValue("Value", "RSAPublicKey", nullptr);
-        RSAPrivateKey = ini.GetValue("Value", "RSAPrivateKey", nullptr);
+        ConfigChannel = ini.GetValue("Value", "ConfigChannel", nullptr);
+        PublicRSAKey = ini.GetValue("Value", "PublicRSAKey", nullptr);
+        PrivateRSAKey = ini.GetValue("Value", "PrivateRSAKey", nullptr);
     }
 
-    const char* GetRSAPublicKey() 
+    const char* GetConfigChannel()
     {
-        return RSAPublicKey;
+        return ConfigChannel;
     }
 
-    const char* GetRSAPrivateKey()
+    const char* GetPublicRSAKey()
     {
-        return RSAPrivateKey;
+        return PublicRSAKey;
     }
 
-    bool GetBoolValue(const char* a_pSection, const char* a_pKey, bool a_nDefault)
+    const char* GetPrivateRSAKey()
     {
-        return ini.GetBoolValue(a_pSection, a_pKey, a_nDefault);
+        return PrivateRSAKey;
+    }
+
+    bool GetEnableValue(const char* a_pKey, bool a_nDefault)
+    {
+        return ini.GetBoolValue("Basic", a_pKey, a_nDefault);
     }
 
     long GetOffsetValue(const char* a_pKey, long a_nDefault)
@@ -91,10 +96,14 @@ namespace util
     {
         char pathOut[MAX_PATH] = {};
         GetModuleFileName(NULL, pathOut, MAX_PATH);
-        auto path = std::filesystem::path(pathOut).parent_path() / "GenshinImpact_Data\\Plugins";
-        std::error_code ec;
-        std::filesystem::rename(path / "Astrolabe.dll", path / "Astrolabe.dll.bak", ec);
-        std::filesystem::rename(path / "MiHoYoMTRSDK.dll", path / "MiHoYoMTRSDK.dll.bak", ec);
+        auto pathOS = std::filesystem::path(pathOut).parent_path() / "GenshinImpact_Data" / "Plugins";
+        auto pathCN = std::filesystem::path(pathOut).parent_path() / "YuanShen_Data" / "Plugins";
+        std::error_code ec; // always ignore error code
+        std::filesystem::rename(pathOS / "Astrolabe.dll", pathOS / "Astrolabe.dll.bak", ec);
+        std::filesystem::rename(pathOS / "MiHoYoMTRSDK.dll", pathOS / "MiHoYoMTRSDK.dll.bak", ec);
+        std::filesystem::rename(pathCN / "Astrolabe.dll", pathCN / "Astrolabe.dll.bak", ec);
+        std::filesystem::rename(pathCN / "MiHoYoMTRSDK.dll", pathCN / "MiHoYoMTRSDK.dll.bak", ec);
+        // how to restore them??? hope nobody use it in prod.... XD
     }
 
     // https://github.com/yubie-re/vmp-virtualprotect-bypass/blob/main/src/vp-patch.hpp
